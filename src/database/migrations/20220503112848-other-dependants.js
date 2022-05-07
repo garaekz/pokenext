@@ -84,10 +84,12 @@ const { ITEM_SPRITE_TABLE, ItemSpritesSchema } = require('../models/item-sprites
 const { POKEMON_FORM_SPRITE_TABLE, PokemonFormSpritesSchema } = require('../models/pokemon-form-sprites.model');
 const { POKEMON_SPRITE_TABLE, PokemonSpritesSchema } = require('../models/pokemon-sprites.model');
 const { STAT_TABLE, StatSchema } = require('../models/stat.model');
+const { BERRY_FLAVOR_NAME_TABLE, BerryFlavorNameSchema } = require('../models/berry-flavor-name.model');
 
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable(BERRY_FLAVOR_TABLE, BerryFlavorSchema);
+    await queryInterface.createTable(BERRY_FLAVOR_NAME_TABLE, BerryFlavorNameSchema);
     await queryInterface.createTable(STAT_TABLE, StatSchema);
     await queryInterface.createTable(CHARACTERISTIC_TABLE, CharacteristicSchema);
     await queryInterface.createTable(CHARACTERISTIC_DESCRIPTION_TABLE, CharacteristicDescriptionSchema);

@@ -32,12 +32,56 @@ import { Region } from '../src/database/models/region.model';
 import { Shape } from '../src/database/models/shape.model';
 import { SuperContestEffect } from '../src/database/models/supercontest-effect.model';
 import { GrowthrateProse } from '../src/database/models/growthrate-prose.model';
+import { MoveAttributeProse } from '../src/database/models/move-attribute-prose.model';
+import { MoveLearnMethodProse } from '../src/database/models/move-learn-method-prose.model';
+import { BerryFirmnessName } from '../src/database/models/berry-firmness-name.model';
+import { ColorName } from '../src/database/models/color-name.model';
+import { ContestTypeName } from '../src/database/models/contest-type-name.model';
+import { EggGroupName } from '../src/database/models/egg-group-name.model';
+import { EncounterConditionName } from '../src/database/models/encounter-condition-name.model';
+import { EncounterMethodName } from '../src/database/models/encounter-method-name.model';
+import { EvolutionTriggerName } from '../src/database/models/evolution-trigger-name.model';
+import { HabitatName } from '../src/database/models/habitat-name.model';
+import { ItemAttributeProse } from '../src/database/models/item-attribute-prose.model';
+import { ItemPocketName } from '../src/database/models/item-pocket-name.model';
+import { LanguageName } from '../src/database/models/language-name.model';
+import { MoveBattlestyleName } from '../src/database/models/move-battlestyle-name.model';
+import { MoveDamageClassProse } from '../src/database/models/move-damage-class-prose.model';
+import { MoveMetaAilmentName } from '../src/database/models/move-meta-ailment-name.model';
+import { MoveTargetProse } from '../src/database/models/move-target-prose.model';
+import { PalParkAreaName } from '../src/database/models/palpark-area-name.model';
+import { PokeathlonStatName } from '../src/database/models/pokeathlon-stat-name.model';
+import { RegionName } from '../src/database/models/region-name.model';
+import { ShapeProse } from '../src/database/models/shape-prose.model';
+import { ContestEffectProse } from '../src/database/models/contest-effect-prose.model';
+import { SuperContestEffectProse } from '../src/database/models/supercontest-effect-prose.model';
+import { BerryFlavor } from '../src/database/models/berry-flavor.model';
+import { Stat } from '../src/database/models/stat.model';
+import { CharacteristicDescription } from '../src/database/models/characteristic-description.model';
+import { Characteristic } from '../src/database/models/characteristic.model';
+import { Generation } from '../src/database/models/generation.model';
+import { Ability } from '../src/database/models/ability.model';
+import { ItemCategory } from '../src/database/models/item-category.model';
+import { Item } from '../src/database/models/item.model';
+import { VersionGroup } from '../src/database/models/version-group.model';
+import { Version } from '../src/database/models/version.model';
+import { AbilityChangelog } from '../src/database/models/ability-changelog.model';
+import { AbilityChangelogProse } from '../src/database/models/ability-changelog-prose.model';
+import { AbilityEffectText } from '../src/database/models/ability-effect-text.model';
+import { AbilityFlavorText } from '../src/database/models/ability-flavor-text.model';
+import { AbilityName } from '../src/database/models/ability-name.model';
+import { EvolutionChain } from '../src/database/models/evolution-chain.model';
+import { Pokedex } from '../src/database/models/pokedex.model';
+import { Specie } from '../src/database/models/specie.model';
+import { DexNumber } from '../src/database/models/dex-number.model';
+import { EggGroupSpecie } from '../src/database/models/eggroup-specie.model';
+import { Type } from '../src/database/models/type.model';
 
-const basePath = path.join(__dirname+'/csv/')
+const basePath = path.join(__dirname+'/csv')
 
-const genericBuild = (parsedHeaders: HeaderTransformFunction | null, filename: String, model: any) => {
+const genericBuild = async (parsedHeaders: HeaderTransformFunction | null, filename: String, model: any) => {
   const list: String[] = [];
-  createReadStream(path.join(basePath+filename))
+  createReadStream(path.join(`${basePath}/${filename}`))
     .pipe(parse({headers: parsedHeaders ? (headers => parsedHeaders(headers)):true}))
     .on("data", (row) => {
       list.push(row);
@@ -47,7 +91,7 @@ const genericBuild = (parsedHeaders: HeaderTransformFunction | null, filename: S
     });
 }
 
-const nonDependentModelsBuild = () => {
+const nonDependentModelsBuild = async () => {
   const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
   genericBuild(makeHeaders, 'berry_firmness.csv', BerryFirmness);
   genericBuild(makeHeaders, 'pokemon_colors.csv', Color);
@@ -78,7 +122,30 @@ const nonDependentModelsBuild = () => {
   genericBuild(null, 'super_contest_effects.csv', SuperContestEffect);
 }
 
-const buildLanguageDependant = async () => {
+const buildOnlyTranslatableModels = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'local_language_id'?'language_id':h);
+  await genericBuild(makeHeaders, 'move_flag_prose.csv', MoveAttributeProse);
+  await genericBuild(makeHeaders, 'berry_firmness_names.csv', BerryFirmnessName);
+  await genericBuild(makeHeaders, 'contest_type_names.csv', ContestTypeName);
+  await genericBuild(makeHeaders, 'egg_group_prose.csv', EggGroupName);
+  await genericBuild(makeHeaders, 'encounter_condition_prose.csv', EncounterConditionName);
+  await genericBuild(makeHeaders, 'encounter_method_prose.csv', EncounterMethodName);
+  await genericBuild(makeHeaders, 'evolution_trigger_prose.csv', EvolutionTriggerName);
+  await genericBuild(makeHeaders, 'pokemon_habitat_names.csv', HabitatName);
+  await genericBuild(makeHeaders, 'item_flag_prose.csv', ItemAttributeProse);
+  await genericBuild(makeHeaders, 'item_pocket_names.csv', ItemPocketName);
+  await genericBuild(makeHeaders, 'language_names.csv', LanguageName);
+  await genericBuild(makeHeaders, 'move_battle_style_prose.csv', MoveBattlestyleName);
+  await genericBuild(makeHeaders, 'move_damage_class_prose.csv', MoveDamageClassProse);
+  await genericBuild(makeHeaders, 'move_meta_ailment_names.csv', MoveMetaAilmentName);
+  await genericBuild(makeHeaders, 'move_target_prose.csv', MoveTargetProse);
+  await genericBuild(makeHeaders, 'pokeathlon_stat_names.csv', PokeathlonStatName);
+  await genericBuild(makeHeaders, 'region_names.csv', RegionName);
+  await genericBuild(makeHeaders, 'contest_effect_prose.csv', ContestEffectProse);
+  await genericBuild(makeHeaders, 'super_contest_effect_prose.csv', SuperContestEffectProse);
+}
+
+const buildGrowthRateProse = async () => {
   const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => {
     switch (h) {
       case 'growth_rate_id':
@@ -94,24 +161,189 @@ const buildLanguageDependant = async () => {
   await genericBuild(makeHeaders, 'growth_rate_prose.csv', GrowthrateProse);
 }
 
-// const buildRegions = () => {
-//   const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
-//   genericBuild(makeHeaders, 'regions.csv', sequelize.models.Region);
-//   genericBuild(makeHeaders, 'region_names.csv', sequelize.models.RegionName);
-// }
+const buildMoveLearnMethodProse = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => {
+    switch (h) {
+      case 'pokemon_move_method_id':
+        return 'move_learn_method_id';
+      case 'local_language_id':
+        return 'language_id';
+      default:
+        return h;
+    }
+  });
+  await genericBuild(makeHeaders, 'pokemon_move_method_prose.csv', MoveLearnMethodProse);
+}
 
-// const buildGenerations = () => {
-//   const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
-//   genericBuild(makeHeaders, 'generations.csv', sequelize.models.Generation);
-//   genericBuild(makeHeaders, 'generation_names.csv', sequelize.models.GenerationName);
-// }
+const buildColorName = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => {
+    switch (h) {
+      case 'pokemon_color_id':
+        return 'color_id';
+      case 'local_language_id':
+        return 'language_id';
+      default:
+        return h;
+    }
+  });
+  await genericBuild(makeHeaders, 'pokemon_color_names.csv', ColorName);
+}
+
+const buildPalParkAreaName = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => {
+    switch (h) {
+      case 'pal_park_area_id':
+        return 'palpark_area_id';
+      case 'local_language_id':
+        return 'language_id';
+      default:
+        return h;
+    }
+  });
+  await genericBuild(makeHeaders, 'pal_park_area_names.csv', PalParkAreaName);
+}
+
+const buildShapeProse = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => {
+    switch (h) {
+      case 'pokemon_shape_id':
+        return 'shape_id';
+      case 'local_language_id':
+        return 'language_id';
+      default:
+        return h;
+    }
+  });
+  await genericBuild(makeHeaders, 'pokemon_shape_prose.csv', ShapeProse);
+}
+
+const buildStat = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => {
+    switch (h) {
+      case 'damage_class_id':
+        return 'move_damage_class_id';
+      case 'identifier':
+        return 'name';
+        default:
+          return h;
+    }
+  });
+  await genericBuild(makeHeaders, 'stats.csv', Stat);
+}
+
+const buildCharacteristic = async () => {
+  await genericBuild(null, 'characteristics.csv', Characteristic);
+}
+
+const buildCharacteristicDescription = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => {
+    switch (h) {
+      case 'local_language_id':
+        return 'language_id';
+      case 'message':
+        return 'description';
+      default:
+        return h;
+    }
+  });
+  await genericBuild(makeHeaders, 'characteristic_text.csv', CharacteristicDescription);
+}
+
+const buildGeneration = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'generations.csv', Generation);
+}
+
+const buildAbility = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'abilities.csv', Ability);
+}
+
+const buildItemCategory = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'item_categories.csv', ItemCategory);
+}
+
+const buildItem = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'items.csv', Item);
+}
+
+const buildVersionGroup = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'version_groups.csv', VersionGroup);
+}
+
+const buildVersion = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'versions.csv', Version);
+}
+
+const buildAbilityChangelog = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'ability_changelog.csv', AbilityChangelog);
+}
+
+const buildAbilityChangelogProse = async () => {
+  await genericBuild(null, 'ability_changelog_prose.csv', AbilityChangelogProse);
+}
+
+const buildAbilityEffectText = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'local_language_id'?'language_id':h);
+  await genericBuild(makeHeaders, 'ability_prose.csv', AbilityEffectText);
+}
+
+const buildAbilityFlavorText = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'local_language_id'?'language_id':h);
+  await genericBuild(makeHeaders, 'ability_flavor_text.csv', AbilityFlavorText);
+}
+
+const buildAbilityName = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'local_language_id'?'language_id':h);
+  await genericBuild(makeHeaders, 'ability_names.csv', AbilityName);
+}
+
+const buildEvolutionChain = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'local_language_id'?'language_id':h);
+  await genericBuild(makeHeaders, 'evolution_chains.csv', EvolutionChain);
+}
+
+const buildPokedex = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'pokedexes.csv', Pokedex);
+}
+
+const buildSpecie = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'growth_rate_id'?'growthrate_id':h);
+  await genericBuild(makeHeaders, 'species.csv', Specie);
+}
+
+const buildDexNumber = async () => {
+  await genericBuild(null, 'pokemon_dex_numbers.csv', DexNumber);
+}
+
+const buildEggGroupSpecie = async () => {
+  await genericBuild(null, 'pokemon_egg_groups.csv', EggGroupSpecie);
+  
+} 
+
+const buildType = async () => {
+  const makeHeaders = (headers: HeaderArray) => headers.map((h:any) => h === 'identifier'?'name':h);
+  await genericBuild(makeHeaders, 'types.csv', Type);
+}
 
 const init = async () => {
   await nonDependentModelsBuild();
-  await buildLanguageDependant();
-  // await buildLanguages();
-  // await buildRegions();
-  // await buildGenerations();
+  await buildOnlyTranslatableModels();
+  await buildGrowthRateProse();
+  await buildMoveLearnMethodProse();
+  await buildColorName();
+  await buildPalParkAreaName();
+  await buildShapeProse();
+  // TODO: BerryFlavor builders missing because weird procesing mumbo jumbo
+  await buildStat();
+  await buildCharacteristic();
+  await buildCharacteristicDescription();
 }
 
 init();

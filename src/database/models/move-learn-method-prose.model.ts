@@ -1,9 +1,9 @@
 import { Model, DataTypes, Sequelize, InferAttributes } from 'sequelize';
-import { MOVE_ATTRIBUTE_TABLE } from './move-attribute.model';
 import { LANGUAGE_TABLE } from './language.model';
-const MOVE_ATTRIBUTE_NAME_TABLE = 'move_attribute_names';
+import { MOVE_LEARN_METHOD_TABLE } from './move-learn-method.model';
+const MOVE_LEARN_METHOD_PROSE_TABLE = 'move_learn_method_proses';
 
-const MoveAttributeNameSchema = {
+const MoveLearnMethodProseSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -12,20 +12,23 @@ const MoveAttributeNameSchema = {
   },
   name: {
     allowNull: false,
-    type: DataTypes.STRING,
-    unique: true
+    type: DataTypes.STRING
   },
-  move_attribute_id: {
+  description: {
+    allowNull: false,
+    type: DataTypes.STRING(1000)
+  },
+  move_learn_method_id: {
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
-      model: MOVE_ATTRIBUTE_TABLE,
+      model: MOVE_LEARN_METHOD_TABLE,
       key: 'id'
     },
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE'
   },
-  language_id: {
+  language_id: {  
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
@@ -37,18 +40,18 @@ const MoveAttributeNameSchema = {
   },
 }
 
-class MoveAttributeName extends Model<InferAttributes<MoveAttributeName>> {
+class MoveLearnMethodProse extends Model<InferAttributes<MoveLearnMethodProse>> {
   static associate(models: any) {
-    this.belongsTo(models.MoveAttribute, {as: 'move_attribute'})
+    this.belongsTo(models.MoveLearnMethod, {as: 'move_learn_method'})
     this.belongsTo(models.Language, {as: 'language'})
   }
   static config(sequelize: Sequelize) {
     return {
       sequelize,
-      tableName: MOVE_ATTRIBUTE_NAME_TABLE,
-      modelName: 'MoveAttributeName',
+      tableName: MOVE_LEARN_METHOD_PROSE_TABLE,
+      modelName: 'MoveLearnMethodProse',
       timestamps: false
     }
   }
 }
-export { MOVE_ATTRIBUTE_NAME_TABLE, MoveAttributeNameSchema, MoveAttributeName }
+export { MOVE_LEARN_METHOD_PROSE_TABLE, MoveLearnMethodProseSchema, MoveLearnMethodProse }

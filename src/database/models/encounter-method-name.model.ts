@@ -1,7 +1,7 @@
 import { Model, DataTypes, Sequelize, InferAttributes } from 'sequelize';
 import { ENCOUNTER_METHOD_TABLE } from './encounter-method.model';
 import { LANGUAGE_TABLE } from './language.model';
-const ENCOUNTER_METHOD_NAME_TABLE = 'item_attribute_names';
+const ENCOUNTER_METHOD_NAME_TABLE = 'encounter_method_names';
 
 const EncounterMethodNameSchema = {
   id: {
@@ -14,10 +14,6 @@ const EncounterMethodNameSchema = {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true
-  },
-  order: {
-    allowNull: false,
-    type: DataTypes.INTEGER
   },
   encounter_method_id: {
     allowNull: false,

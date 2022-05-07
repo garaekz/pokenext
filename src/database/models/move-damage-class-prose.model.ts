@@ -1,9 +1,9 @@
 import { Model, DataTypes, Sequelize, InferAttributes } from 'sequelize';
-import { ITEM_ATTRIBUTE_TABLE } from './item-attribute.model';
+import { MOVE_DAMAGE_CLASS_TABLE } from './move-damage-class.model';
 import { LANGUAGE_TABLE } from './language.model';
-const ITEM_ATTRIBUTE_NAME_TABLE = 'item_attribute_names';
+const MOVE_DAMAGE_CLASS_PROSE_TABLE = 'move_damage_class_proses';
 
-const ItemAttributeNameSchema = {
+const MoveDamageClassProseSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -12,13 +12,17 @@ const ItemAttributeNameSchema = {
   },
   name: {
     allowNull: false,
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
   },
-  item_attribute_id: {
+  description: {
+    allowNull: false,
+    type: DataTypes.STRING(1000),
+  },
+  move_damage_class_id: {
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
-      model: ITEM_ATTRIBUTE_TABLE,
+      model: MOVE_DAMAGE_CLASS_TABLE,
       key: 'id'
     },
     onUpdate: 'CASCADE',
@@ -36,18 +40,18 @@ const ItemAttributeNameSchema = {
   },
 }
 
-class ItemAttributeName extends Model<InferAttributes<ItemAttributeName>> {
+class MoveDamageClassProse extends Model<InferAttributes<MoveDamageClassProse>> {
   static associate(models: any) {
-    this.belongsTo(models.ItemAttribute, {as: 'item_attribute'})
+    this.belongsTo(models.MoveDamageClass, {as: 'move-damage-class'})
     this.belongsTo(models.Language, {as: 'language'})
   }
   static config(sequelize: Sequelize) {
     return {
       sequelize,
-      tableName: ITEM_ATTRIBUTE_NAME_TABLE,
-      modelName: 'ItemAttributeName',
+      tableName: MOVE_DAMAGE_CLASS_PROSE_TABLE,
+      modelName: 'MoveDamageClassProse',
       timestamps: false
     }
   }
 }
-export { ITEM_ATTRIBUTE_NAME_TABLE, ItemAttributeNameSchema, ItemAttributeName }
+export { MOVE_DAMAGE_CLASS_PROSE_TABLE, MoveDamageClassProseSchema, MoveDamageClassProse }

@@ -1,19 +1,22 @@
 import { Model, DataTypes, Sequelize, InferAttributes } from 'sequelize';
 import { ITEM_ATTRIBUTE_TABLE } from './item-attribute.model';
 import { LANGUAGE_TABLE } from './language.model';
-const ITEM_ATTRIBUTE_DESCRIPTION_TABLE = 'item_attribute_descriptions';
+const ITEM_ATTRIBUTE_PROSE_TABLE = 'item_attribute_proses';
 
-const ItemAttributeDescriptionSchema = {
+const ItemAttributeProseSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER
   },
+  name: {
+    allowNull: false,
+    type: DataTypes.STRING
+  },
   description: {
     allowNull: false,
-    type: DataTypes.STRING,
-    unique: true
+    type: DataTypes.STRING(1000)
   },
   item_attribute_id: {
     allowNull: false,
@@ -37,7 +40,7 @@ const ItemAttributeDescriptionSchema = {
   },
 }
 
-class ItemAttributeDescription extends Model<InferAttributes<ItemAttributeDescription>> {
+class ItemAttributeProse extends Model<InferAttributes<ItemAttributeProse>> {
   static associate(models: any) {
     this.belongsTo(models.ItemAttribute, {as: 'item_attribute'})
     this.belongsTo(models.Language, {as: 'language'})
@@ -45,10 +48,10 @@ class ItemAttributeDescription extends Model<InferAttributes<ItemAttributeDescri
   static config(sequelize: Sequelize) {
     return {
       sequelize,
-      tableName: ITEM_ATTRIBUTE_DESCRIPTION_TABLE,
-      modelName: 'ItemAttributeDescription',
+      tableName: ITEM_ATTRIBUTE_PROSE_TABLE,
+      modelName: 'ItemAttributeProse',
       timestamps: false
     }
   }
 }
-export { ITEM_ATTRIBUTE_DESCRIPTION_TABLE, ItemAttributeDescriptionSchema, ItemAttributeDescription }
+export { ITEM_ATTRIBUTE_PROSE_TABLE, ItemAttributeProseSchema, ItemAttributeProse }

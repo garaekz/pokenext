@@ -1,25 +1,24 @@
 import { Model, DataTypes, Sequelize, InferAttributes } from 'sequelize';
-import { MOVE_ATTRIBUTE_TABLE } from './move-attribute.model';
 import { LANGUAGE_TABLE } from './language.model';
-const MOVE_ATTRIBUTE_DESCRIPTION_TABLE = 'move_attribute_descriptions';
+import { MOVE_TARGET_TABLE } from './move-target.model';
+const MOVE_TARGET_PROSE_TABLE = 'move_target_proses';
 
-const MoveAttributeDescriptionSchema = {
+const MoveTargetProseSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER
   },
-  description: {
+  name: {
     allowNull: false,
-    type: DataTypes.STRING,
-    unique: true
+    type: DataTypes.STRING
   },
-  move_attribute_id: {
+  move_target_id: {
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
-      model: MOVE_ATTRIBUTE_TABLE,
+      model: MOVE_TARGET_TABLE,
       key: 'id'
     },
     onUpdate: 'CASCADE',
@@ -37,18 +36,18 @@ const MoveAttributeDescriptionSchema = {
   },
 }
 
-class MoveAttributeDescription extends Model<InferAttributes<MoveAttributeDescription>> {
+class MoveTargetProse extends Model<InferAttributes<MoveTargetProse>> {
   static associate(models: any) {
-    this.belongsTo(models.MoveAttribute, {as: 'move_attribute'})
+    this.belongsTo(models.MoveTarget, {as: 'move_target'})
     this.belongsTo(models.Language, {as: 'language'})
   }
   static config(sequelize: Sequelize) {
     return {
       sequelize,
-      tableName: MOVE_ATTRIBUTE_DESCRIPTION_TABLE,
-      modelName: 'MoveAttributeDescription',
+      tableName: MOVE_TARGET_PROSE_TABLE,
+      modelName: 'MoveTargetProse',
       timestamps: false
     }
   }
 }
-export { MOVE_ATTRIBUTE_DESCRIPTION_TABLE, MoveAttributeDescriptionSchema, MoveAttributeDescription }
+export { MOVE_TARGET_PROSE_TABLE, MoveTargetProseSchema, MoveTargetProse }

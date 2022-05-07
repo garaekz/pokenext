@@ -15,7 +15,7 @@ const AbilityChangelogProseSchema = {
     type: DataTypes.STRING,
     unique: true
   },
-  ability_change_id: {
+  ability_changelog_id: {
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
